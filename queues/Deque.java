@@ -1,22 +1,22 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
     private Node first;
     private Node last;
-    private Node beforeLast;
     private int length;
 
     private class Node {
         private Item item;
         private Node next;
+        private Node previous;
 
-        public Node(Item item) {
-            this.item = item;
-            this.next = null;
+        public Node() {
+            item = null;
+            next = null;
+            previous = null;
         }
-
-
     }
 
     private class ListIterator implements Iterator<Item> {
@@ -27,10 +27,20 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            Item item = current.item;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            else {
+                Item item = current.item;
 
-            current = current.next;
-            return item;
+                current = current.next;
+                return item;
+            }
+
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -53,46 +63,94 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the front
     public void addFirst(Item item) {
-        Node temp = new Node(item);
-        if (isEmpty()) {
-            first = temp;
-            last = temp;
+        if (item == null) {
+            throw new IllegalArgumentException();
+        }
+        else {
+            Node temp = new Node();
+            temp.item = item;
+
+            if (isEmpty()) {
+                temp.next = null;
+                temp.previous = null;
+                last = temp;
+                first = last;
+            }
+            else {
+                temp.next = first;
+                first.previous = temp;
+                first = temp;
+            }
+
+            length++;
         }
 
-        temp.next = first;
-        first = temp;
-        length++;
     }
 
     // add the item to the back
     public void addLast(Item item) {
-        Node temp = new Node(item);
-        if (isEmpty()) {
-            first = temp;
-            last = temp;
+        if (item == null) {
+            throw new IllegalArgumentException();
         }
-        Node oldLast = last;
-        oldLast.next = temp;
-        last = temp;
-        beforeLast = oldLast;
-        length++;
+        else {
+            Node temp = new Node();
+            temp.item = item;
+            if (isEmpty()) {
+                temp.next = null;
+                temp.previous = null;
+                last = temp;
+                first = last;
+            }
+            else {
+                Node oldLast = last;
+                oldLast.next = temp;
+                temp.previous = oldLast;
+                last = temp;
+
+            }
+
+            length++;
+        }
+
 
     }
 
     // remove and return the item from the front
     public Item removeFirst() {
-        Item item = first.item;
-        first = first.next;
-        length--;
-        return item;
+        if (length == 0) {
+            throw new NoSuchElementException();
+        }
+        else {
+            Item item = first.item;
+            first = first.next;
+            length--;
+            return item;
+        }
+
+
     }
 
     // remove and return the item from the back
     public Item removeLast() {
-        Item item = last.item;
-        last = beforeLast;
-        length--;
-        return item;
+        if (length == 0) {
+            throw new NoSuchElementException();
+        }
+        else {
+            Item item = last.item;
+            if (length == 1) {
+                removeFirst();
+
+            }
+            else {
+                last.previous.next = null;
+                last = last.previous;
+                length--;
+            }
+
+
+            return item;
+        }
+
     }
 
     // return an iterator over items in order from front to back
@@ -106,9 +164,23 @@ public class Deque<Item> implements Iterable<Item> {
 
         Deque<String> d = new Deque<String>();
         System.out.println(d.isEmpty());
+
         d.addFirst("AddFirst");
         d.addFirst("AddSecond");
+        d.addFirst("AddThird");
+        d.addLast("AddFourth");
+        d.removeLast();
+        d.removeLast();
+        d.removeLast();
+        d.removeLast();
+        d.removeLast();
         System.out.println(d.isEmpty());
         System.out.println(d.length);
+
+        for (String s : d) {
+            System.out.println(s);
+        }
+
+
     }
 }
