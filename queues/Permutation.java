@@ -3,13 +3,19 @@ import edu.princeton.cs.algs4.StdIn;
 public class Permutation {
     public static void main(String[] args) {
         int k = Integer.parseInt(args[0]);
-        String string = StdIn.readString();
+        RandomizedQueue<String> r = new RandomizedQueue<>();
 
-        Deque<String> deq = new Deque<>();
 
-        System.out.println(k);
-        System.out.println(string);
-        System.out.println(deq);
+        while (!StdIn.isEmpty()) {
+            String value = StdIn.readString();
+            r.enqueue(value);
+
+
+        }
+        for (int i = 0; i < k; i++) {
+            System.out.println(r.dequeue());
+        }
+
 
     }
 }

@@ -140,7 +140,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        
+        RandomizedQueue<Integer> r = new RandomizedQueue<>();
+        r.enqueue(1);
+        r.enqueue(2);
+        r.enqueue(3);
+        r.enqueue(4);
+
+        for (int a : r) {
+            System.out.println("outer" + a);
+
+        }
+        System.out.println();
+        for (int a : r) {
+            System.out.println("inner" + a);
+        }
+
 
     }
 
