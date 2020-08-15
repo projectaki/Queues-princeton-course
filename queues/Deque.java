@@ -119,6 +119,7 @@ public class Deque<Item> implements Iterable<Item> {
         Item item = first.item;
         if (length == 1) {
             first = first.next;
+            last = null;
 
         }
         else {
@@ -142,6 +143,7 @@ public class Deque<Item> implements Iterable<Item> {
             if (length == 1) {
                 first = last;
                 first = first.next;
+                last = null;
 
             }
             else {
@@ -167,16 +169,7 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         Deque<String> d = new Deque<>();
 
-        System.out.println(d.isEmpty());
-        d.addFirst("addFirst");
-
-        d.addLast("addLast");
-
-        d.addFirst("evenFirst");
-
-        d.addLast("evenLast");
-
-      
+        
         for (String s : d) {
             System.out.println(s);
         }
