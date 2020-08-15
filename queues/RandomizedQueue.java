@@ -1,20 +1,17 @@
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private ResizingArray resizingArray;
+    private final ResizingArray resizingArray;
 
     private class ResizingArray {
         private Item[] array;
         private int length;
-        private int popCount;
 
         public ResizingArray() {
-            popCount = 0;
             length = 0;
             array = (Item[]) new Object[1];
         }
@@ -22,6 +19,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public void push(Item item) {
             if (length == array.length) resize(2 * array.length);
             array[length++] = item;
+
         }
 
         public void resize(int cap) {
@@ -44,12 +42,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public Item popRandom() {
             int rand = StdRandom.uniform(length);
             Item item = array[rand];
-            System.out.println(Arrays.toString(array));
+
             array[rand] = array[length - 1];
             array[length - 1] = null;
-            System.out.println(Arrays.toString(array));
+
             length--;
-            popCount++;
+
             if (length > 0 && length == array.length / 4) resize(array.length / 2);
             return item;
 
@@ -58,12 +56,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomIterator implements Iterator<Item> {
         private int count;
-        private Item[] shuffled;
+        private final Item[] shuffled;
 
         public RandomIterator() {
             count = 0;
             shuffled = resizingArray.array;
-            StdRandom.shuffle(shuffled, 0, resizingArray.length - resizingArray.popCount);
+            StdRandom.shuffle(shuffled, 0, resizingArray.array.length - (resizingArray.array.length
+                    - resizingArray.length));
         }
 
         public boolean hasNext() {
@@ -127,7 +126,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item sample() {
         if (isEmpty()) throw new NoSuchElementException();
         else {
-            int rand = StdRandom.uniform(0, resizingArray.length + 1);
+            int rand = StdRandom.uniform(resizingArray.length);
             Item item = resizingArray.array[rand];
             return item;
         }
@@ -141,21 +140,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        RandomizedQueue<String> rQ = new RandomizedQueue<>();
-
-        System.out.println(rQ.isEmpty());
-        rQ.enqueue("first");
-        rQ.enqueue("second");
-        rQ.enqueue("third");
-        rQ.enqueue("fourth");
-        rQ.dequeue();
-        rQ.dequeue();
-
-        Iterator<String> iterator = rQ.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
-
+        
 
     }
 
